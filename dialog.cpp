@@ -39,11 +39,10 @@ void Dialog::setResistanceValue(double ResisVal){
 
 double Dialog::LineInterpolation(double ResistanceValue)
 {
-    QStringList model,wordlist;
-
-    if  ((ResistanceValue > MASCResistance[0])||(ResistanceValue < MASCResistance[59])){
-            return 0;
-    }
+    QStringList model,ResistanceAndTemperatureTableArray;
+    float ResistanceTable[200];
+    qint16 TemperatureTable[200];
+    bool ok;
 
     QFile file("C:/Users/e1205074/Documents/test/A-10K3A1.csv");
     if(!file.open(QIODevice::ReadOnly)){
@@ -56,25 +55,31 @@ double Dialog::LineInterpolation(double ResistanceValue)
 
         QString line = ResistanceAndTemperatureTable.readLine();
         QStringList fields = line.split(",");
-        model.append(fields);        //appendRow(fields);
-        qDebug()<<line;
-        qDebug()<<fields;
-        qDebug()<<model;
+        ResistanceAndTemperatureTableArray.append(fields);
+
+    }
+    file.close();
+
+
+    for (int i=0; i<=((ResistanceAndTemperatureTableArray.size())/2-1);i++ ){
+
+        TemperatureTable[i] = ResistanceAndTemperatureTableArray.at(i*2).toInt(&ok,10);
+
+        ResistanceTable[i] = ResistanceAndTemperatureTableArray.at(i*2+1).toFloat(&ok);
 
     }
 
 
-     qDebug() << model.at(1).toLocal8Bit().constData();
+
+    if  ((ResistanceValue > MASCResistance[0])||(ResistanceValue < MASCResistance[59])){
+            return 0;
+    }
 
 
 
-    file.close();
+    for (int i = 0;i<=60 ;i++){
 
 
-    for (int i = 0;i<=59;i++){
-            //if (ResistanceValue = MASCResistance[i]){
-            //    return MASCTemperature[i];
-            //}
 
             if (ResistanceValue > MASCResistance[i]){
               double  resultTemperature = MASCTemperature[i] +(ResistanceValue-MASCResistance[i])* ((MASCTemperature[i-1]-MASCTemperature[i])/(MASCResistance[i-1]-MASCResistance[i]));
@@ -104,7 +109,7 @@ void Dialog::on_pushButton_clicked()
 
            std::cout<<LineInterpolation(ResistanceValue);
 
-            QString strValue = QString::number(LineInterpolation(ResistanceValue), 'f', 3);
+            QString strValue = QString::number(LineInterpolation(ResistanceValue), 'f', 2);
 
              FahrenheitTemperature = LineInterpolation(ResistanceValue)*(9/5) + 32;
 

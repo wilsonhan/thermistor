@@ -16,8 +16,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>23</y>
+     <x>140</x>
+     <y>20</y>
      <width>441</width>
      <height>41</height>
     </rect>
@@ -27,7 +27,7 @@
 font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
-    <string> MASC Thermistor Resistance to Temperature Converter</string>
+    <string>Thermistor Resistance to Temperature Converter</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
